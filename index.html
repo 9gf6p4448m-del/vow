@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vow 誓約 — 暗色奇幻 ARPG</title>
+<style>
+  :root{
+    /* 刻意單一暗色世界:燭火照亮的祭壇。tokens 不隨主題反轉,這是設計選擇 */
+    --ink:#0a0a0f;          /* 近黑石壇,帶冷紫 */
+    --ink-raise:#14131c;    /* 抬升面板 */
+    --ink-raise2:#1b1926;
+    --bone:#e8e2d6;         /* 燭光下的骨白 */
+    --ash:#918a99;          /* 靜謐紫灰 */
+    --ash-dim:#6b6577;
+    --line:#2a2734;
+    --ember:#d99a4a;        /* 燭火 / 誓約燈:主引導色 */
+    --ember-bright:#f0b969;
+    --blood:#8b0000;        /* 祭壇 / 背叛 */
+    --blood-bright:#c1272d;
+
+    --measure:62ch;
+    --serif:"Palatino Linotype","Book Antiqua",Palatino,"Iowan Old Style",Georgia,
+            "Kaiti TC","DFKai-SB","BiauKai","Noto Serif CJK TC","Songti TC",serif;
+    --cjk-serif:"Kaiti TC","DFKai-SB","BiauKai","Noto Serif CJK TC","Songti TC",
+                "Palatino Linotype",serif;
+    --sans:"Segoe UI","Microsoft JhengHei","PingFang TC","Noto Sans TC",system-ui,sans-serif;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--ink); color:var(--bone);
+    font-family:var(--sans); line-height:1.75; -webkit-font-smoothing:antialiased;
+    font-size:clamp(1rem,.96rem+.2vw,1.08rem);
+  }
+  ::selection{background:rgba(217,154,74,.28); color:#fff}
+  a{color:inherit}
+  img{max-width:100%}
+
+  .shell{max-width:920px; margin:0 auto; padding:0 22px}
+
+  /* ---------- 英雄區 ---------- */
+  .hero{
+    position:relative; min-height:88vh; display:flex; flex-direction:column;
+    justify-content:center; align-items:center; text-align:center;
+    padding:80px 22px 64px; overflow:hidden;
+  }
+  /* 緋紅祭壇光:一道自上而下的窄光柱 */
+  .hero::before{
+    content:""; position:absolute; top:-6%; left:50%; transform:translateX(-50%);
+    width:min(520px,80vw); height:120%;
+    background:radial-gradient(closest-side,rgba(139,0,0,.30),transparent 72%);
+    filter:blur(6px); pointer-events:none;
+  }
+  /* 餘燼呼吸光暈 */
+  .ember-glow{
+    position:absolute; top:34%; left:50%; width:min(680px,92vw); height:440px;
+    transform:translate(-50%,-50%); pointer-events:none; z-index:0;
+    background:radial-gradient(closest-side,rgba(217,154,74,.22),rgba(217,154,74,.06) 55%,transparent 74%);
+    animation:breathe 7s ease-in-out infinite;
+  }
+  @keyframes breathe{
+    0%,100%{opacity:.7; transform:translate(-50%,-50%) scale(1)}
+    50%{opacity:1; transform:translate(-50%,-50%) scale(1.06)}
+  }
+  .hero > *{position:relative; z-index:1}
+
+  .eyebrow{
+    font-size:.74rem; letter-spacing:.4em; text-transform:uppercase;
+    color:var(--ember); font-weight:600; margin:0 0 26px;
+  }
+  .wordmark{
+    font-family:var(--serif); font-weight:700; line-height:.92;
+    letter-spacing:.06em; margin:0;
+    font-size:clamp(4.2rem,15vw,8.5rem);
+    color:#f4efe6;
+    text-shadow:0 2px 40px rgba(217,154,74,.25), 0 1px 2px #000;
+  }
+  .wordmark .zh{
+    display:block; font-family:var(--cjk-serif); letter-spacing:.22em;
+    font-size:clamp(2.4rem,9vw,4.6rem); font-weight:600; margin-top:.12em;
+    color:var(--bone);
+    text-shadow:0 2px 30px rgba(139,0,0,.4), 0 1px 2px #000;
+  }
+  .tagline{
+    font-family:var(--serif); font-style:italic;
+    font-size:clamp(1.05rem,.9rem+.8vw,1.45rem);
+    color:var(--ash); margin:26px auto 0; max-width:34ch; text-wrap:balance;
+  }
+  .cta-row{
+    display:flex; flex-direction:column; align-items:center; gap:14px; margin-top:42px;
+  }
+  .cta{
+    display:inline-flex; align-items:center; gap:12px; text-decoration:none;
+    font-family:var(--sans); font-size:1.12rem; font-weight:700; letter-spacing:.03em;
+    color:#1a0c05; background:linear-gradient(160deg,var(--ember-bright),var(--ember));
+    padding:16px 40px; border-radius:2px;
+    box-shadow:0 0 0 1px rgba(240,185,105,.5), 0 14px 40px -12px rgba(217,154,74,.7);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .cta:hover{transform:translateY(-2px);
+    box-shadow:0 0 0 1px rgba(240,185,105,.7), 0 20px 50px -12px rgba(217,154,74,.85)}
+  .cta:focus-visible{outline:2px solid var(--ember-bright); outline-offset:4px}
+  .cta .arw{font-size:1.15rem; transition:transform .2s ease}
+  .cta:hover .arw{transform:translateX(4px)}
+  .cta-note{font-size:.85rem; letter-spacing:.14em; color:var(--ash-dim); text-transform:uppercase}
+
+  /* ---------- 區段通用 ---------- */
+  .band{padding:74px 0; border-top:1px solid var(--line)}
+  .band-label{
+    font-size:.72rem; letter-spacing:.34em; text-transform:uppercase;
+    color:var(--ember); font-weight:600; margin:0 0 10px;
+  }
+  .band-title{
+    font-family:var(--cjk-serif); font-weight:600; letter-spacing:.06em;
+    font-size:clamp(1.7rem,1.2rem+1.6vw,2.5rem); margin:0 0 34px; color:#f4efe6;
+    text-wrap:balance;
+  }
+
+  /* ---------- 故事勾子 ---------- */
+  .tome{padding:82px 0; border-top:1px solid var(--line); position:relative}
+  .tome p{
+    font-family:var(--serif); font-size:clamp(1.25rem,1rem+1vw,1.7rem);
+    line-height:1.85; color:var(--bone); max-width:24ch; margin:0 auto; text-align:center;
+    text-wrap:balance;
+  }
+  .tome .drop{color:var(--ember); font-style:italic}
+
+  /* ---------- 亮點:刻痕石板 ---------- */
+  .tenets{display:grid; gap:16px}
+  .tenet{
+    position:relative; background:linear-gradient(165deg,var(--ink-raise2),var(--ink-raise));
+    border:1px solid var(--line); border-radius:3px; padding:26px 28px 26px 30px;
+    transition:border-color .25s ease, transform .25s ease;
+  }
+  .tenet::before{
+    content:""; position:absolute; left:0; top:14px; bottom:14px; width:2px;
+    background:linear-gradient(var(--ember),var(--blood)); border-radius:2px; opacity:.8;
+  }
+  .tenet:hover{border-color:#443c4e; transform:translateY(-3px)}
+  .tenet h3{
+    font-family:var(--cjk-serif); font-size:1.32rem; font-weight:600; letter-spacing:.04em;
+    margin:0 0 8px; color:#f2ead9;
+  }
+  .tenet h3 .k{
+    font-family:var(--serif); font-style:italic; font-weight:400; font-size:.82rem;
+    letter-spacing:.14em; color:var(--ember); text-transform:uppercase;
+    display:block; margin-bottom:6px;
+  }
+  .tenet p{margin:0; color:var(--ash); font-size:1rem; line-height:1.7; max-width:60ch}
+  .tenet.wide{grid-column:1/-1}
+  @media(min-width:720px){
+    .tenets{grid-template-columns:1fr 1fr}
+  }
+
+  /* ---------- 職業 ---------- */
+  .roster{display:grid; gap:12px; grid-template-columns:1fr}
+  @media(min-width:560px){.roster{grid-template-columns:1fr 1fr}}
+  @media(min-width:860px){.roster{grid-template-columns:1fr 1fr 1fr}}
+  .cls{
+    display:flex; align-items:baseline; gap:14px; padding:16px 18px;
+    background:var(--ink-raise); border:1px solid var(--line); border-radius:3px;
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .cls:hover{border-color:#443c4e; background:var(--ink-raise2)}
+  .cls .name{
+    font-family:var(--cjk-serif); font-size:1.16rem; font-weight:600; color:#f2ead9;
+    letter-spacing:.06em; white-space:nowrap;
+  }
+  .cls .desc{font-size:.9rem; color:var(--ash-dim); line-height:1.5}
+
+  /* ---------- 怎麼玩 ---------- */
+  .play-facts{
+    display:grid; gap:0; grid-template-columns:1fr; max-width:640px;
+    border:1px solid var(--line); border-radius:3px; overflow:hidden;
+  }
+  .fact{display:flex; gap:16px; align-items:flex-start; padding:18px 22px}
+  .fact + .fact{border-top:1px solid var(--line)}
+  .fact .mark{color:var(--ember); font-size:1.05rem; line-height:1.6; flex:0 0 auto}
+  .fact b{color:var(--bone); font-weight:600}
+  .fact span{color:var(--ash)}
+
+  /* ---------- 結尾 CTA ---------- */
+  .finale{
+    text-align:center; padding:96px 22px 90px; border-top:1px solid var(--line);
+    position:relative; overflow:hidden;
+  }
+  .finale::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(60% 90% at 50% 120%,rgba(139,0,0,.22),transparent 70%);
+  }
+  .finale h2{
+    position:relative; font-family:var(--cjk-serif); font-weight:600;
+    font-size:clamp(1.8rem,1.3rem+1.8vw,2.7rem); letter-spacing:.08em; margin:0 0 8px;
+    color:#f4efe6; text-wrap:balance;
+  }
+  .finale p{position:relative; color:var(--ash); margin:0 0 34px; font-family:var(--serif); font-style:italic}
+  .finale .cta{position:relative}
+
+  footer{
+    text-align:center; padding:34px 22px 54px; color:var(--ash-dim);
+    font-size:.82rem; letter-spacing:.06em; border-top:1px solid var(--line);
+  }
+  footer .u{color:var(--ash)}
+
+  @media(prefers-reduced-motion:reduce){
+    .ember-glow{animation:none}
+    *{transition:none !important}
+  }
+</style>
+
+<header class="hero">
+  <div class="ember-glow" aria-hidden="true"></div>
+  <p class="eyebrow">暗色奇幻 · 俯視角動作 RPG</p>
+  <h1 class="wordmark">VOW<span class="zh">誓約</span></h1>
+  <p class="tagline">命運是既定的祭壇，誓念是唯一的裝備。</p>
+  <div class="cta-row">
+    <a class="cta" href="https://9gf6p4448m-del.github.io/vow-game/" target="_blank" rel="noopener">
+      開始遊玩 <span class="arw" aria-hidden="true">→</span>
+    </a>
+    <span class="cta-note">免費 · 免安裝 · 瀏覽器直接開</span>
+  </div>
+</header>
+
+<section class="tome">
+  <div class="shell">
+    <p>
+      世界的結局早已被寫下。<br>
+      神將知道你的名字，祭壇在盡頭靜靜等你。<br>
+      你唯一能決定的，是走到那裡之前——<br>
+      <span class="drop">你立下了什麼誓，又背棄了誰。</span>
+    </p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="shell">
+    <p class="band-label">Why it cuts deep</p>
+    <h2 class="band-title">這不只是砍怪，是一場關於誓言的抉擇</h2>
+    <div class="tenets">
+      <article class="tenet wide">
+        <h3><span class="k">The Oath</span>以誓言為裝備</h3>
+        <p>立下誓言換取力量——但毀誓的反噬會如影隨形。你身上最強的裝備，是你敢不敢守住自己的承諾。</p>
+      </article>
+      <article class="tenet">
+        <h3><span class="k">Hidden Weight</span>你的選擇，暗中被記著</h3>
+        <p>忠誠、怨懟、誓念都在看不見的地方累積。遊戲從不明說，但世界會記得，並在結局回敬你。</p>
+      </article>
+      <article class="tenet">
+        <h3><span class="k">Kill · Spare · Bind</span>敵人未必是敵人</h3>
+        <p>擊殺、饒恕、或與之立約收服。你怎麼對待對手，決定他們成為並肩的夥伴，還是反噬的那把刀。</p>
+      </article>
+      <article class="tenet">
+        <h3><span class="k">Three Fates</span>三種結局，由你走成</h3>
+        <p>五章主線通往截然不同的終局；那是存讀檔救不回的分歧，全繫於你一路的誓與叛。</p>
+      </article>
+      <article class="tenet">
+        <h3><span class="k">The Cycle</span>夢魘輪迴 · 前世殘響</h3>
+        <p>通關只是開始。輪迴深處藏著更兇的挑戰，與你「前世」留下的烙印，等你再度踏入。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="shell">
+    <p class="band-label">Choose your vow</p>
+    <h2 class="band-title">六道誓者</h2>
+    <div class="roster">
+      <div class="cls"><span class="name">狂戰士</span><span class="desc">以血為薪的近戰狂潮</span></div>
+      <div class="cls"><span class="name">遊俠</span><span class="desc">冷靜致命的遠程獵手</span></div>
+      <div class="cls"><span class="name">咒術師</span><span class="desc">操弄詛咒與元素之人</span></div>
+      <div class="cls"><span class="name">影刃</span><span class="desc">遊走陰影，一擊要害</span></div>
+      <div class="cls"><span class="name">聖騎</span><span class="desc">以誓約為盾的守護者</span></div>
+      <div class="cls"><span class="name">馭獸者</span><span class="desc">與野獸立約，並肩而戰</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="shell">
+    <p class="band-label">Before you begin</p>
+    <h2 class="band-title">怎麼開始玩</h2>
+    <div class="play-facts">
+      <div class="fact"><span class="mark" aria-hidden="true">◆</span>
+        <span><b>用電腦或筆電玩。</b>這是鍵盤操作的動作遊戲——移動加技能鍵；進遊戲後按 <b>O</b> 可查看與自訂所有按鍵。</span></div>
+      <div class="fact"><span class="mark" aria-hidden="true">◆</span>
+        <span><b>免下載、免安裝。</b>點「開始遊玩」用瀏覽器直接開，讀取一下就進得去。</span></div>
+      <div class="fact"><span class="mark" aria-hidden="true">◆</span>
+        <span><b>進度自動保存。</b>存在你這台電腦的瀏覽器裡，下次用同一個瀏覽器開就接續。</span></div>
+      <div class="fact"><span class="mark" aria-hidden="true">◆</span>
+        <span><b>完全免費。</b>沒有內購、沒有廣告，走到你的結局為止。</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="finale">
+  <h2>祭壇在盡頭等你</h2>
+  <p>你會守住哪一句誓？</p>
+  <a class="cta" href="https://9gf6p4448m-del.github.io/vow-game/" target="_blank" rel="noopener">
+    開始遊玩 <span class="arw" aria-hidden="true">→</span>
+  </a>
+</section>
+
+<footer>
+  <span class="u">Vow 誓約</span> — 一款暗色奇幻俯視角 2D ARPG
+</footer>
+</body>
+</html>
