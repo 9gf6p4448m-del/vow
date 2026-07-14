@@ -154,20 +154,25 @@
   }
 
   /* ---------- 職業 ---------- */
-  .roster{display:grid; gap:12px; grid-template-columns:1fr}
-  @media(min-width:560px){.roster{grid-template-columns:1fr 1fr}}
-  @media(min-width:860px){.roster{grid-template-columns:1fr 1fr 1fr}}
+  .roster{display:grid; gap:14px; grid-template-columns:1fr}
+  @media(min-width:600px){.roster{grid-template-columns:1fr 1fr}}
+  @media(min-width:900px){.roster{grid-template-columns:1fr 1fr 1fr}}
   .cls{
-    display:flex; align-items:baseline; gap:14px; padding:16px 18px;
-    background:var(--ink-raise); border:1px solid var(--line); border-radius:3px;
-    transition:border-color .2s ease, background .2s ease;
+    display:flex; flex-direction:column; gap:6px; padding:20px 20px 22px;
+    background:linear-gradient(165deg,var(--ink-raise2),var(--ink-raise));
+    border:1px solid var(--line); border-radius:4px;
+    transition:border-color .25s ease, transform .25s ease;
   }
-  .cls:hover{border-color:#443c4e; background:var(--ink-raise2)}
+  .cls:hover{border-color:#4a4256; transform:translateY(-3px)}
   .cls .name{
-    font-family:var(--cjk-serif); font-size:1.16rem; font-weight:600; color:#f2ead9;
-    letter-spacing:.06em; white-space:nowrap;
+    font-family:var(--cjk-serif); font-size:1.32rem; font-weight:600; color:#f2ead9;
+    letter-spacing:.08em;
   }
-  .cls .desc{font-size:.9rem; color:var(--ash-dim); line-height:1.5}
+  .cls .vow{
+    font-family:var(--serif); font-style:italic; font-size:.96rem; color:var(--ember);
+    letter-spacing:.02em;
+  }
+  .cls .desc{font-size:.9rem; color:var(--ash); line-height:1.65; margin-top:3px}
 
   /* ---------- 怎麼玩 ---------- */
   .play-facts{
@@ -181,6 +186,8 @@
   .fact span{color:var(--ash)}
 
   /* ---------- 遊戲畫面 ---------- */
+  .gallery{display:grid; gap:18px; grid-template-columns:1fr}
+  @media(min-width:760px){.gallery{grid-template-columns:1fr 1fr}}
   .shot{margin:0}
   .shot img{
     display:block; width:100%; height:auto; border-radius:4px;
@@ -248,12 +255,19 @@
 <section class="band">
   <div class="shell">
     <p class="band-label">A glimpse of the world</p>
-    <h2 class="band-title">踏入燭火照亮的廢城</h2>
-    <figure class="shot">
-      <img src="shot.jpg" width="1280" height="945" loading="lazy"
-        alt="Vow 誓約 遊戲畫面:燭火照亮的城鎮裡,狂戰士與守燈者、商人、傭兵散落在火光中">
-      <figcaption>守燈者、商人與傭兵散落在火光裡——這是你每一次啟程與歸來的地方。</figcaption>
-    </figure>
+    <h2 class="band-title">從火光下的城，到環伺群敵的荒野</h2>
+    <div class="gallery">
+      <figure class="shot">
+        <img src="shot.jpg" width="1280" height="945" loading="lazy"
+          alt="Vow 誓約 遊戲畫面:燭火照亮的城鎮裡,狂戰士與守燈者、商人、傭兵散落在火光中">
+        <figcaption>守燈者、商人與傭兵散落在火光裡——你每一次啟程與歸來的地方。</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="shot2.jpg" width="1280" height="943" loading="lazy"
+          alt="Vow 誓約 遊戲畫面:咒術師踏入荒野,骷髏與野獸在草原上環伺">
+        <figcaption>踏出城門，骷髏與野獸在草原上環伺——這裡沒有安全的路。</figcaption>
+      </figure>
+    </div>
   </div>
 </section>
 
@@ -291,12 +305,36 @@
     <p class="band-label">Choose your vow</p>
     <h2 class="band-title">六道誓者</h2>
     <div class="roster">
-      <div class="cls"><span class="name">狂戰士</span><span class="desc">以血為薪的近戰狂潮</span></div>
-      <div class="cls"><span class="name">遊俠</span><span class="desc">冷靜致命的遠程獵手</span></div>
-      <div class="cls"><span class="name">咒術師</span><span class="desc">操弄詛咒與元素之人</span></div>
-      <div class="cls"><span class="name">影刃</span><span class="desc">遊走陰影，一擊要害</span></div>
-      <div class="cls"><span class="name">聖騎</span><span class="desc">以誓約為盾的守護者</span></div>
-      <div class="cls"><span class="name">馭獸者</span><span class="desc">與野獸立約，並肩而戰</span></div>
+      <div class="cls">
+        <span class="name">狂戰士</span>
+        <span class="vow">「怒火即武器」</span>
+        <span class="desc">近戰大劍，高風險高輸出；扇形揮擊撕裂群敵，終結重擊將對手轟飛。</span>
+      </div>
+      <div class="cls">
+        <span class="name">遊俠</span>
+        <span class="vow">「距離即生存」</span>
+        <span class="desc">遠程弓弩，風箏走位；雙段快射邊移動邊輸出，但一旦被貼身就是危機。</span>
+      </div>
+      <div class="cls">
+        <span class="name">咒術師</span>
+        <span class="vow">「以血肉為祭」</span>
+        <span class="desc">禁忌法術，詛咒與獻祭；單發重咒彈緩慢卻毀滅性十足，魔力與智力決定一切。</span>
+      </div>
+      <div class="cls">
+        <span class="name">影刃</span>
+        <span class="vow">「刀在暗處，誓在刃上」</span>
+        <span class="desc">雙刃快斬，背刺與瞬步；連段貼身撕裂，暴擊是一切——但你比誰都脆。</span>
+      </div>
+      <div class="cls">
+        <span class="name">聖騎</span>
+        <span class="vow">「盾在，誓就在」</span>
+        <span class="desc">沉默神明最後的聖騎；盾擊無可撼動，站在最前面，然後活著走回來。</span>
+      </div>
+      <div class="cls">
+        <span class="name">馭獸者</span>
+        <span class="vow">「獸不說謊」</span>
+        <span class="desc">人背叛過他，獸沒有；與荒狼並肩，牠的獠牙永遠走在你身側，命隨你的命一起變強。</span>
+      </div>
     </div>
   </div>
 </section>
